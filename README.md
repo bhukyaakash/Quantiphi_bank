@@ -1,171 +1,95 @@
-# Backend - Bank Transaction Manager
+# Bank Transaction UPI Summary & Categorization
 
-Express.js REST API backend for transaction processing and analytics.
+A complete automated money manager application that parses unstructured transaction alerts, categorizes transactions, and visualizes spending habits.
 
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js v18+
-- MongoDB (local or Atlas)
-
-### Installation
-
-```bash
-# Install dependencies
-npm install
-
-# Create environment file
-cp .env.example .env
-
-# Update .env with your configuration
-nano .env
-
-# Start development server
-npm run dev
-```
-
-Server will run on `http://localhost:3000`
-
-## 📦 Dependencies
-
-- **express** - Web framework
-- **mongoose** - MongoDB ODM
-- **cors** - CORS middleware
-- **dotenv** - Environment variables
-- **jsonwebtoken** - JWT authentication
-- **bcryptjs** - Password hashing
-- **helmet** - Security headers
-- **morgan** - HTTP logging
-- **express-rate-limit** - Rate limiting
-
-## 🔧 Scripts
-
-```bash
-npm start          # Start production server
-npm run dev        # Start with nodemon (auto-reload)
-npm test           # Run tests
-npm run lint       # Run ESLint
-npm run lint:fix   # Fix linting issues
-npm run seed       # Seed database with sample data
-npm run backup     # Backup MongoDB
-```
-
-## 📁 Project Structure
+## Project Structure
 
 ```
-backend/
-├── src/
-│   ├── index.js                 # Entry point
+bank-transaction-manager/
+├── backend/
+│   ├── data/
+│   │   └── store.js              # In-memory data store with 10 demo transactions
 │   ├── routes/
-│   │   ├── transactions.js     # Transaction endpoints
-│   │   ├── metrics.js          # Metrics endpoints
-│   │   ├── merchants.js        # Merchant endpoints
-│   │   └── auth.js             # Auth endpoints
-│   ├── middleware/
-│   │   └── errorHandler.js     # Error handling
-│   ├── models/
-│   │   └── schemas.js          # Database schemas
-│   └── config/
-│       └── database.js         # DB connection
-├── tests/
-├── scripts/
-├── .env.example
-├── package.json
+│   │   └── transactions.js         # REST API endpoints
+│   ├── services/
+│   │   ├── parser.js             # Transaction text parser & auto-categorizer
+│   │   └── categorizer.js        # Category management utilities
+│   ├── package.json              # Backend dependencies
+│   └── server.js                 # Express server entry point
+├── frontend/
+│   ├── styles/
+│   │   └── main.css              # Complete dark theme styling
+│   ├── services/
+│   │   └── api.js                # API communication layer
+│   ├── components/
+│   │   ├── AnalyticsBlock.js     # Progress bar analytics
+│   │   ├── TransactionCard.js      # Transaction card with dropdown
+│   │   └── TransactionForm.js      # Input form handler
+│   ├── app.js                    # Main application orchestrator
+│   └── index.html                # Single page application
 └── README.md
 ```
 
-## 🔌 API Endpoints
+## Quick Start
 
-### Transactions
-- `POST /api/transactions/parse` - Parse single transaction
-- `POST /api/transactions/batch` - Batch process transactions
-- `GET /api/transactions` - Get all transactions
-- `PATCH /api/transactions/:id/category` - Update category
-
-### Metrics
-- `POST /api/metrics/calculate` - Calculate metrics
-- `GET /api/metrics/:userId` - Get user metrics
-- `POST /api/metrics/insights` - Generate insights
-
-### Merchants
-- `GET /api/merchants` - Get all merchants
-- `GET /api/merchants/:category` - Get category merchants
-- `POST /api/merchants/add` - Add merchant
-
-### Authentication
-- `POST /api/auth/register` - Register user
-- `POST /api/auth/login` - Login user
-- `GET /api/auth/profile` - Get user profile
-
-## 🧪 Testing
-
+### Backend Setup
 ```bash
-# Run all tests
-npm test
-
-# Run tests with coverage
-npm run test:coverage
-
-# Watch mode
-npm run test:watch
-```
-
-## 🔐 Security
-
-- JWT-based authentication
-- Helmet for security headers
-- CORS enabled
-- Rate limiting on API endpoints
-- Input validation and sanitization
-- Password hashing with bcryptjs
-
-## 📝 Environment Variables
-
-```
-NODE_ENV=development
-PORT=3000
-MONGODB_URI=mongodb://localhost:27017/bankmanager
-JWT_SECRET=your-secret-key
-CORS_ORIGIN=http://localhost:3001
-RATE_LIMIT_MAX_REQUESTS=100
-```
-
-## 🐛 Troubleshooting
-
-### MongoDB Connection Failed
-```bash
-# Check if MongoDB is running
-mongosh
-
-# Update MONGODB_URI in .env
-```
-
-### Port Already in Use
-```bash
-# Find process using port 3000
-lsof -i :3000
-
-# Kill process
-kill -9 <PID>
-```
-
-### Dependencies Issue
-```bash
-# Clear node_modules and reinstall
-rm -rf node_modules package-lock.json
+cd backend
 npm install
+npm start
+# Server runs on http://localhost:5000
 ```
 
-## 📚 Additional Resources
+### Frontend Setup
+```bash
+# Option 1: Python
+cd frontend && python -m http.server 3000
 
-- [Express.js Documentation](https://expressjs.com/)
-- [Mongoose Documentation](https://mongoosejs.com/)
-- [JWT Documentation](https://jwt.io/)
+# Option 2: Node.js (install serve globally)
+npm install -g serve
+cd frontend && serve -p 3000
 
-## 📞 Support
+# Option 3: VS Code Live Server extension
+# Right-click index.html -> Open with Live Server
+```
 
-For issues and questions, create a GitHub issue or contact support.
+## API Endpoints
 
----
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | /api/transactions | List all transactions |
+| GET | /api/transactions/summary | Get analytics data |
+| POST | /api/transactions | Parse & create from raw text |
+| PUT | /api/transactions/:id/category | Update category |
+| GET | /api/health | Health check |
 
-**Happy coding! 🚀**
+## Features
+
+### Frontend
+- **Transaction Stream**: Chronological scrolling feed with animated cards
+- **Visual Analytics**: Categorized progress bars with color-coded fills
+- **Interactive Category Selector**: Dropdown to manually override auto-tags
+- **Cashback Detection**: Green "Expected Savings" rows for reward-eligible transactions
+
+### Backend
+- **Automated Keyword Parser**: Detects merchants (Zomato, Swiggy, Uber, etc.) and auto-assigns categories
+- **Cumulative Metric Reducer**: Separates incoming/outgoing, calculates category sums
+- **Reward Partner Detection**: Identifies Cashback keywords and known reward partners
+- **Simulated Savings Injection**: Calculates 5% expected rewards for eligible transactions
+
+## Supported Merchant Keywords
+
+| Category | Keywords |
+|----------|----------|
+| Food & Dining | Zomato, Swiggy, Dominos, McDonalds, Starbucks, KFC, Burger King, food, restaurant |
+| Travel | Uber, Ola, Rapido, RedBus, MakeMyTrip, Goibibo, IRCTC, train, flight, cab |
+| Salary | salary, payroll, company ltd, consulting, freelance, dividend |
+| Miscellaneous | Amazon, Flipkart, BigBasket, medical, insurance, bill, recharge |
+
+## Cashback & Rewards
+
+The system detects:
+- **Cashback keywords**: "cashback", "reward", "points credited", "bonus"
+- **Reward partners**: Amazon Pay, Paytm, PhonePe, Google Pay, CRED, MobiKwik
+
+For reward partner transactions (non-cashback), a simulated **5% Expected Savings** row appears in green.

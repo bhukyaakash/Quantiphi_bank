@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bank Transaction UPI Summary</title>
+  <link rel="stylesheet" href="styles/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-wallet"></i>
+          <h1>MoneyManager</h1>
+        </div>
+        <div class="header-stats">
+          <div class="stat-pill incoming">
+            <i class="fas fa-arrow-down"></i>
+            <span id="totalIncoming">₹0</span>
+          </div>
+          <div class="stat-pill outgoing">
+            <i class="fas fa-arrow-up"></i>
+            <span id="totalOutgoing">₹0</span>
+          </div>
+          <div class="stat-pill savings">
+            <i class="fas fa-piggy-bank"></i>
+            <span id="totalSavings">₹0</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Analytics Block -->
+      <section class="analytics-block">
+        <h2 class="section-title">
+          <i class="fas fa-chart-pie"></i>
+          Spending Analytics
+        </h2>
+        <div class="progress-container" id="progressContainer">
+          <!-- Progress blocks rendered by JS -->
+        </div>
+      </section>
+
+      <!-- Add Transaction Form -->
+      <section class="add-transaction-section">
+        <div class="form-card">
+          <h3><i class="fas fa-plus-circle"></i> Add New Transaction</h3>
+          <div class="form-row">
+            <input 
+              type="text" 
+              id="rawTextInput" 
+              placeholder="Paste your transaction alert message here... (e.g., Paid Rs. 250 to Zomato)"
+              class="text-input"
+            />
+            <button id="addTransactionBtn" class="btn-primary">
+              <i class="fas fa-paper-plane"></i>
+              Parse & Add
+            </button>
+          </div>
+          <p class="form-hint">
+            <i class="fas fa-lightbulb"></i>
+            Try: "Paid Rs. 500 to Uber", "Received Rs. 2000 from Company", "Swiggy order Rs. 350"
+          </p>
+        </div>
+      </section>
+
+      <!-- Transaction Stream -->
+      <section class="transaction-stream">
+        <div class="stream-header">
+          <h2 class="section-title">
+            <i class="fas fa-stream"></i>
+            Transaction History
+          </h2>
+          <div class="stream-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="incoming">Incoming</button>
+            <button class="filter-btn" data-filter="outgoing">Outgoing</button>
+          </div>
+        </div>
+        <div id="transactionFeed" class="transaction-feed">
+          <!-- Transaction cards rendered by JS -->
+        </div>
+      </section>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+      <div class="spinner"></div>
+      <p>Processing transaction...</p>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden">
+      <i class="fas fa-check-circle"></i>
+      <span id="toastMessage">Success!</span>
+    </div>
+  </div>
+
+  <script src="services/api.js"></script>
+  <script src="components/AnalyticsBlock.js"></script>
+  <script src="components/TransactionCard.js"></script>
+  <script src="components/TransactionForm.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
